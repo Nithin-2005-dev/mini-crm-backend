@@ -15,7 +15,6 @@ export class TasksService {
    * ADMIN: create and assign task
    */
   async create(dto: CreateTaskDto) {
-    // Ensure assigned user exists and is EMPLOYEE
     const user = await this.prisma.user.findUnique({
       where: { id: dto.assignedToId },
     });
@@ -24,7 +23,6 @@ export class TasksService {
       throw new ForbiddenException('Task can only be assigned to an EMPLOYEE');
     }
 
-    // Ensure customer exists
     const customer = await this.prisma.customer.findUnique({
       where: { id: dto.customerId },
     });
@@ -40,6 +38,10 @@ export class TasksService {
         assignedToId: dto.assignedToId,
         customerId: dto.customerId,
       },
+      include: {
+        assignedTo: true,
+        customer: true,
+      },
     });
   }
 
@@ -48,19 +50,15 @@ export class TasksService {
    * EMPLOYEE: only own tasks
    */
   async findAll(user: { userId: string; role: string }) {
-    if (user.role === 'ADMIN') {
-      return this.prisma.task.findMany({
-        include: {
-          customer: true,
-          assignedTo: true,
-        },
-        orderBy: { createdAt: 'desc' },
-      });
-    }
+    const where =
+      user.role === 'ADMIN'
+        ? {}
+        : { assignedToId: user.userId };
 
     return this.prisma.task.findMany({
-      where: { assignedToId: user.userId },
+      where,
       include: {
+        assignedTo: true,
         customer: true,
       },
       orderBy: { createdAt: 'desc' },
@@ -75,8 +73,8 @@ export class TasksService {
     const task = await this.prisma.task.findUnique({
       where: { id },
       include: {
-        customer: true,
         assignedTo: true,
+        customer: true,
       },
     });
 
@@ -114,6 +112,10 @@ export class TasksService {
     return this.prisma.task.update({
       where: { id },
       data: { status: dto.status },
+      include: {
+        assignedTo: true,
+        customer: true,
+      },
     });
   }
 }
