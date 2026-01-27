@@ -1,6 +1,6 @@
 # API Testing
 
-This project includes a Postman collection for testing authentication and customer management APIs.
+This project includes Postman collections for testing authentication, user management, customer management, and task management APIs.
 
 ---
 
@@ -10,19 +10,26 @@ This project includes a Postman collection for testing authentication and custom
 
 ```bash
 npm run start:dev
-2. Import the Postman collection
-File path: postman/Auth.postman_collection.json
+2. Import Postman collections
+postman/Auth-Customers.postman_collection.json
 
-3. Run requests in order
-Authentication
+postman/Tasks.postman_collection.json
+
+Authentication Tests
 Register User
+Endpoint: POST /auth/register
+
+Used to create EMPLOYEE users
 
 Login User
+Endpoint: POST /auth/login
+
+Returns JWT access token
 
 Admin Bootstrap
 An initial ADMIN user is created using a Prisma seed script.
 
-Admin Credentials (for testing)
+Admin Credentials
 Email: admin@test.com
 
 Password: admin123
@@ -30,30 +37,72 @@ Password: admin123
 Run the seed command if the admin does not exist:
 
 npx prisma db seed
+Users API Tests (ADMIN Only)
+Get All Users
+Endpoint: GET /users
+
+Access: ADMIN only
+
+Get User by ID
+Endpoint: GET /users/:id
+
+Access: ADMIN only
+
+Returns 404 Not Found if user does not exist
+
+Update User Role
+Endpoint: PATCH /users/:id/role
+
+Access: ADMIN only
+
+Updates only the user role
+
 Customer API Tests
-Create Customer (ADMIN only)
+Create Customer
 Endpoint: POST /customers
 
-Requires ADMIN role
+Access: ADMIN only
 
-Returns 403 Forbidden for EMPLOYEE users
+EMPLOYEE receives 403 Forbidden
 
 Get All Customers
 Endpoint: GET /customers
 
-Accessible by ADMIN and EMPLOYEE
-
-Requires JWT authentication
+Access: ADMIN, EMPLOYEE
 
 Get Customer by ID
 Endpoint: GET /customers/:id
 
-Returns 404 Not Found if the customer does not exist
+Returns 404 Not Found if customer does not exist
+
+Task API Tests
+Create Task
+Endpoint: POST /tasks
+
+Access: ADMIN only
+
+Assigns task to an EMPLOYEE
+
+Get Tasks
+Endpoint: GET /tasks
+
+ADMIN sees all tasks
+
+EMPLOYEE sees only assigned tasks
+
+Update Task Status
+Endpoint: PATCH /tasks/:id/status
+
+ADMIN can update any task
+
+EMPLOYEE can update only own tasks
 
 Security Notes
-JWT access token must be sent in the header:
+JWT token must be sent as:
 
 Authorization: Bearer <token>
-Passwords are never returned in API responses
+Unauthorized access returns 401 Unauthorized
 
-Unauthorized requests return 401 Unauthorized
+Role violations return 403 Forbidden
+
+Passwords are never returned in API responses
