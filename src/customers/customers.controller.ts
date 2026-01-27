@@ -20,6 +20,7 @@ import {
   ApiBearerAuth,
   ApiOperation,
   ApiResponse,
+  ApiQuery,
 } from '@nestjs/swagger';
 
 @ApiTags('Customers')
@@ -49,6 +50,18 @@ export class CustomersController {
   @Roles('ADMIN', 'EMPLOYEE')
   @ApiOperation({ summary: 'Get customers with pagination' })
   @ApiResponse({ status: 200, description: 'Paginated customers returned' })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    example: 1,
+    description: 'Page number (default: 1)',
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    example: 10,
+    description: 'Number of records per page (default: 10)',
+  })
   findAll(
     @Query('page') page = '1',
     @Query('limit') limit = '10',
