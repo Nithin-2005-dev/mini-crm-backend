@@ -2,6 +2,8 @@
 
 This project includes Postman collections for testing authentication, user management, customer management, and task management APIs.
 
+All APIs are exposed under the `/api` base path.
+
 ---
 
 ## How to Use
@@ -17,12 +19,12 @@ postman/Tasks.postman_collection.json
 
 Authentication Tests
 Register User
-Endpoint: POST /auth/register
+Endpoint: POST /api/auth/register
 
 Used to create EMPLOYEE users
 
 Login User
-Endpoint: POST /auth/login
+Endpoint: POST /api/auth/login
 
 Returns JWT access token
 
@@ -39,19 +41,19 @@ Run the seed command if the admin does not exist:
 npx prisma db seed
 Users API Tests (ADMIN Only)
 Get All Users
-Endpoint: GET /users
+Endpoint: GET /api/users
 
 Access: ADMIN only
 
 Get User by ID
-Endpoint: GET /users/:id
+Endpoint: GET /api/users/:id
 
 Access: ADMIN only
 
 Returns 404 Not Found if user does not exist
 
 Update User Role
-Endpoint: PATCH /users/:id/role
+Endpoint: PATCH /api/users/:id/role
 
 Access: ADMIN only
 
@@ -59,39 +61,51 @@ Updates only the user role
 
 Customer API Tests
 Create Customer
-Endpoint: POST /customers
+Endpoint: POST /api/customers
 
 Access: ADMIN only
 
 EMPLOYEE receives 403 Forbidden
 
-Get All Customers
-Endpoint: GET /customers
+Get Customers (Paginated)
+Endpoint: GET /api/customers?page=1&limit=10
 
 Access: ADMIN, EMPLOYEE
 
+Returns paginated response with metadata
+
 Get Customer by ID
-Endpoint: GET /customers/:id
+Endpoint: GET /api/customers/:id
 
 Returns 404 Not Found if customer does not exist
 
+Update Customer
+Endpoint: PATCH /api/customers/:id
+
+Access: ADMIN only
+
+Delete Customer
+Endpoint: DELETE /api/customers/:id
+
+Access: ADMIN only
+
 Task API Tests
 Create Task
-Endpoint: POST /tasks
+Endpoint: POST /api/tasks
 
 Access: ADMIN only
 
 Assigns task to an EMPLOYEE
 
 Get Tasks
-Endpoint: GET /tasks
+Endpoint: GET /api/tasks
 
 ADMIN sees all tasks
 
 EMPLOYEE sees only assigned tasks
 
 Update Task Status
-Endpoint: PATCH /tasks/:id/status
+Endpoint: PATCH /api/tasks/:id/status
 
 ADMIN can update any task
 
