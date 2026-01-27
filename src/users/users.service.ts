@@ -6,6 +6,7 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
+import { Role } from '@prisma/client';
 
 @Injectable()
 export class UsersService {
@@ -33,7 +34,7 @@ export class UsersService {
         email,
         name,
         password: hashedPassword,
-        role: 'EMPLOYEE', // default role
+        role: Role.EMPLOYEE, // default role
       },
       select: {
         id: true,
@@ -97,7 +98,8 @@ export class UsersService {
   /**
    * Update user role (admin use)
    */
-  async updateRole(id: string, role: 'ADMIN' | 'EMPLOYEE') {
+  async updateRole(id: string, role: Role) {
+    // Ensure user exists
     await this.findById(id);
 
     return this.prisma.user.update({
