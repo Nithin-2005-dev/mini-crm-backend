@@ -43,12 +43,12 @@ export class CustomersController {
   }
 
   /**
-   * Get customers with pagination
+   * Get customers with pagination and search
    * ADMIN & EMPLOYEE
    */
   @Get()
   @Roles('ADMIN', 'EMPLOYEE')
-  @ApiOperation({ summary: 'Get customers with pagination' })
+  @ApiOperation({ summary: 'Get customers with pagination and search' })
   @ApiResponse({ status: 200, description: 'Paginated customers returned' })
   @ApiQuery({
     name: 'page',
@@ -62,13 +62,21 @@ export class CustomersController {
     example: 10,
     description: 'Number of records per page (default: 10)',
   })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    example: 'acme',
+    description: 'Search by name, email, phone, or company',
+  })
   findAll(
     @Query('page') page = '1',
     @Query('limit') limit = '10',
+    @Query('search') search?: string,
   ) {
     return this.customersService.findAll(
       Number(page),
       Number(limit),
+      search,
     );
   }
 
