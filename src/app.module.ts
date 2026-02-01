@@ -17,22 +17,4 @@ import { TasksModule } from './tasks/tasks.module';
     TasksModule,
   ],
 })
-@Module({
-  imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
-    PrismaModule,
-    UsersModule,
-    AuthModule,
-    CustomersModule,
-  ],
-})
-
-@Module({
-  imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
-    PrismaModule,
-    UsersModule,
-    AuthModule,
-  ],
-})
 export class AppModule {}
